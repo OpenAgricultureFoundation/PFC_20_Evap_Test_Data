@@ -101,4 +101,4 @@ You'll find the individual videos for each bot in the corresponding compressed s
 
 
 #### Data Plots
-   You can view the output of the `notebooks/Plot PFC Evap Test Data.ipynb` in the [doc/jupyter_output/Plot PFC Evap Test Data/ Directory](doc/jupyter_output/Plot PFC Evap Test Data/Plot PFC Evap Test Data.md)
+   You can view the output of the `notebooks/Plot PFC Evap Test Data.ipynb` in the [doc/jupyter_output/Plot PFC Evap Test Data/ Directory](doc/jupyter_output/Plot%20PFC%20Evap%20Test%20Data/Plot%20PFC%20Evap%20Test%20Data.md)
