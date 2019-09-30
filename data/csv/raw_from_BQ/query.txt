@@ -1,0 +1,53 @@
+#standardsql
+
+# The regex function indexes fields starting at zero!
+# 0: Key
+# 1: var name
+# 2: timestamp
+# 3: device ID
+
+SELECT
+  REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)') as device, 
+  REGEXP_EXTRACT(id, r'(?:[^\~]*\~){2}([^~]*)') as UTC,
+  REGEXP_EXTRACT(id, r'(?:[^\~]*\~){1}([^~]*)') as var,
+  JSON_EXTRACT_SCALAR(values, "$.values[0].name") as name,
+  JSON_EXTRACT_SCALAR(values, "$.values[0].value") as value
+   
+  FROM openag_public_user_data.vals
+
+# All 15 EDUs in the ML on Mar. 12, 2019
+WHERE (
+#the machines below are from the PFC EDU 20 test and all but three were in the previous pilot
+ 'EDU-C9B9F1A0-f4-5e-ab-5b-4f-d2' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-4EF485F5-f4-5e-ab-5b-10-cd' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-56F786AB-f4-5e-ab-5c-33-b2' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-30EB6274-f4-5e-ab-66-6f-05' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-429A28CD-f4-5e-ab-3c-f3-d2' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-FACAD357-f4-5e-ab-67-5d-92' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-B4092A13-f4-5e-ab-5a-4d-f9' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-30A77B2D-f4-5e-ab-64-50-92' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-B373ACFF-f4-5e-ab-66-4b-6a' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-27B1A1C6-f4-5e-ab-3b-35-dd' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-DC266DD8-f4-5e-ab-60-49-b2' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-46CF2F54-f4-5e-ab-5d-fd-81' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-84A7BF83-f4-5e-ab-5a-4d-ae' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-A3F734CE-f4-5e-ab-59-ac-e3' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-D834D808-f4-5e-ab-fa-82-e8' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-32B65C51-50-65-83-d0-fb-bf' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-90DB5116-50-65-83-e6-7d-b0' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-E074D2DE-f4-5e-ab-3d-d0-61' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-D473FCE2-f4-5e-ab-65-8d-62' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+OR 'EDU-F86DC2E3-50-65-83-d5-51-e5' = REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)')
+)
+  
+  AND 'boot' != REGEXP_EXTRACT(id, r'(?:[^\~]*\~){1}([^~]*)')
+  AND 'status' != REGEXP_EXTRACT(id, r'(?:[^\~]*\~){1}([^~]*)')
+
+# eliminate empty values
+  AND FALSE = REGEXP_CONTAINS(values, "'value':'None'")
+
+# date range, oldest to newest
+  AND TIMESTAMP( REGEXP_EXTRACT(id, r'(?:[^\~]*\~){2}([^~]*)')) <= TIMESTAMP('2019-01-01')  AND TIMESTAMP( REGEXP_EXTRACT(id, r'(?:[^\~]*\~){2}([^~]*)')) >= TIMESTAMP('2018-10-10')
+
+# order by device ID then timestamp
+  ORDER BY REGEXP_EXTRACT(id, r'(?:[^\~]*\~){3}([^~]*)'), REGEXP_EXTRACT(id, r'(?:[^\~]*\~){2}([^~]*)') ASC # DESC 

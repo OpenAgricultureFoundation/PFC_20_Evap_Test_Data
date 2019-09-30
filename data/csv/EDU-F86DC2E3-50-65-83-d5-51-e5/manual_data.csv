@@ -1,0 +1,6 @@
+treatment,date,dissovled_o2,height_cm,leaf_count,leaves_removed,harvest_fresh_mass_g
+Control (fan + airstone),20190116,NA,1.5,NA,NA,NA
+Control (fan + airstone),20190122,NA,3.5,NA,NA,NA
+Control (fan + airstone),20190128,NA,4.0,6.0,0.0,NA
+Control (fan + airstone),20190204,NA,5.0,8.0,NA,NA
+Control (fan + airstone),20190215,NA,10.0,12.0,NA,4.0
